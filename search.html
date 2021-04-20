@@ -20,25 +20,31 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-              <a class="nav-link" href="search.html">Search</a>
+              <a class="nav-link " aria-current="page" href="index.html">Home</a>
+              <a class="nav-link active" href="search.html" >Search</a>
             </div>
           </div>
         </div>
       </nav>
 
       <div class="container" id="api-data">
-        <h1>Search for our Collection</h1>
-        <table class="table">
-          <thead>
+        <p><h1>Explore our Collection</h1></p>
+
+
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark">
             <tr>
-              <th scope="col">Object Number</th>
-              <th scope="col">Title</th>
+              <th scope="col">Object Type</th>
               <th scope="col">Artist</th>
+              <th scope="col">Title</th>
+              <th scope="col">Period</th>
               <th scope="col">Image</th>
             </tr>
           </thead>
+
           <tbody id="myTable">
+            <p id="loading"></p>
+
 
           </tbody>
 

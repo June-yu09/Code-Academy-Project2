@@ -13,41 +13,62 @@ if (document.title == "Home"){
 }
 
 
+
 function fetchData(){
-    fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=25")
-    .then( (response) => {
-        return response.json();
-    }).then( (data) => {
-        displayData(data);        
-    }).catch((err) => {
-        console.log(err);
+    fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=25&type=painting")
+    .then( response => response.json() )
+    
+    .then( data => {        
+        data.artObjects.forEach((d)=>{
+            const oN = d.objectNumber;
+            console.log(fetch(`https://www.rijksmuseum.nl/api/en/collection/${oN}?key=gDhkonP6`))
+            return fetch(`https://www.rijksmuseum.nl/api/en/collection/${oN}?key=gDhkonP6`).then( response => response.json() )
+            .then((a)=>{
+                loading("")
+                displayData(a);
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
     })
+    
+})
+.catch((err)=>{
+    console.log(err);
+})
+}
+
+
+function loading(str){
+    document.getElementById("loading").innerHTML = str;
 }
 
 function displayData(data){
     const tb = document.getElementById("myTable");
-    data.artObjects.forEach((d)=>{
-        const newRow = document.createElement("tr");
-        tb.appendChild(newRow);
-        const newNumber = document.createElement("td");
-        newNumber.innerHTML = d.objectNumber;
-        tb.appendChild(newNumber);
-        const newTitle = document.createElement("td");
-        newTitle.innerHTML = d.longTitle;
-        tb.appendChild(newTitle);
-        const newArtist = document.createElement("td");
-        newArtist.innerHTML = d.principalOrFirstMaker;
-        tb.appendChild(newArtist);
-        const myImage = document.createElement("IMG");
-        myImage.setAttribute("src", d.webImage.url);
-        myImage.setAttribute("width", "400px")
-        myImage.setAttribute("height","400px")
-        tb.appendChild(myImage);
-
-    })
+    const d = data.artObject
+    const newRow = document.createElement("tr");
+    tb.appendChild(newRow);
+    const newType = document.createElement("td");
+    newType.innerHTML = d.objectTypes;
+    tb.appendChild(newType);
+    const newArtist = document.createElement("td");
+    newArtist.innerHTML = d.principalMakers[0].name;
+    tb.appendChild(newArtist);
+    const newTitle = document.createElement("td");
+    newTitle.innerHTML = d.title;
+    tb.appendChild(newTitle);
+    const newPeriod = document.createElement("td");
+    newPeriod.innerHTML = d.dating.period;
+    tb.appendChild(newPeriod);
+    const myImage = document.createElement("IMG");
+    myImage.setAttribute("src", d.webImage.url);
+    myImage.setAttribute("width", "400px")
+    myImage.setAttribute("height","400px")
+    tb.appendChild(myImage);
 }
 
 
 if (document.title=="Search"){
     fetchData();
+    loading("LOADING...");
 }
