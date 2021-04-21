@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Search</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -20,34 +20,42 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-              <a class="nav-link" href="search.html">Search</a>
-              <a class="nav-link" href="search2.html" >Our Top Pieces</a>
+              <a class="nav-link " aria-current="page" href="index.html">Home</a>
+              <a class="nav-link" href="search.html" >Search</a>
+              <a class="nav-link active" href="search2.html" >Our Top Pieces</a>
             </div>
           </div>
         </div>
-    </nav>
-    <div class="container" >
-    <img src="images/front.jpeg" class="rounded mx-auto d-block front-image" alt="front" >
+      </nav>
 
-    <figure class="text-center">
-        <h1>Welkom!</h1>
-        <br>
-        <blockquote class="blockquote">
-          <p>Welcome to Rijksmuseum Online Gallery</p>
-        </blockquote>
-        
-        <p>Do you want to know about our Rijksmuseum?</p>
-        <button type="button" class="btn btn-outline-dark" id="myButton">Show More</button>
+      <div class="container" id="api-data">
+        <p><h1>Our Top pieces</h1></p>
 
-        <p id="myDesc" style="display: none" >
-            The Rijksmuseum is a Dutch national museum dedicated to arts and history in Amsterdam.
-            The Rijksmuseum was founded in The Hague on 19 November 1798 and moved to Amsterdam in 1808, where it was first located in the Royal Palace and later in the Trippenhuis.
-            The museum has on display 8,000 objects of art and history, from their total collection of 1 million objects from the years 1200–2000, among which are some masterpieces by Rembrandt, Frans Hals, and Johannes Vermeer.
-        </p>
-        
-    </figure>
-    </div>
+    
+
+
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Object Type</th>
+              <th scope="col">Artist</th>
+              <th scope="col">Title</th>
+              <th scope="col">Period</th>
+              <th scope="col">Image</th>
+            </tr>
+          </thead>
+
+          <tbody id="myTable">
+            <p id="loading"></p>
+
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
 
     
     <script src="main.js"></script>

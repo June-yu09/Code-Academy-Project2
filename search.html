@@ -22,6 +22,7 @@
             <div class="navbar-nav">
               <a class="nav-link " aria-current="page" href="index.html">Home</a>
               <a class="nav-link active" href="search.html" >Search</a>
+              <a class="nav-link" href="search2.html" >Our Top Pieces</a>
             </div>
           </div>
         </div>
@@ -29,6 +30,42 @@
 
       <div class="container" id="api-data">
         <p><h1>Explore our Collection</h1></p>
+
+        <h4>Type : </h4>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+          <input type="checkbox" name="typeOfPiece" class="btn-check" value="painting" id="painting" autocomplete="off">
+          <label class="btn btn-outline-dark" for="painting">Painting</label>
+        
+          <input type="checkbox" name="typeOfPiece" class="btn-check" value="figure" id="figure" autocomplete="off">
+          <label class="btn btn-outline-dark" for="figure">Figure</label>
+        
+          <input type="checkbox" name="typeOfPiece" class="btn-check" value="tombFigure" id="tombFigure" autocomplete="off">
+          <label class="btn btn-outline-dark" for="tombFigure">Tomb Figure</label>
+        </div>
+
+        <h4>Century : </h4>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="btnradio" id="16C" autocomplete="off" checked>
+          <label class="btn btn-outline-dark" for="16C">16C</label>
+        
+          <input type="radio" class="btn-check" name="btnradio" id="17C" autocomplete="off">
+          <label class="btn btn-outline-dark" for="17C">17C</label>
+        
+          <input type="radio" class="btn-check" name="btnradio" id="19C" autocomplete="off">
+          <label class="btn btn-outline-dark" for="19C">19C</label>
+        </div>
+
+        <h4>Artist : </h4>
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+          <div class="btn-group" role="group">
+            <button id="Mydropdown" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              ...
+            </button>
+            <ul id="artistName" class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              
+            </ul>
+          </div>
+        </div>
 
 
         <table class="table table-bordered align-middle">
