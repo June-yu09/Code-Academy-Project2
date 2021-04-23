@@ -14,25 +14,61 @@ if (document.title == "Home"){
 
 
 
-function fetchData(){
+// function fetchData(){
+//     fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=30")
+//     .then( response => response.json())
+//     .then( data => {
+//         console.log("First fetch :",data);
+//         return data;
+//     })
+//     .then(async data => {
+//         await Promise.all(data.artObjects.map(d => {
+//             return fetch(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     loading("")
+//                     displayData(data);
+//                     console.log(data);
+//                 })
+//                 .catch(err=> console.log(err))
+//         }))
+//     })
+//     .catch(err=> console.log(err))
+// }
+
+const myUrls = [];
+
+function fetchUrls(){
     fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=30")
-    .then( response => response.json())
-    .then( data => {
-        return data;
-    })
-    .then(async data => {
-        await Promise.all(data.artObjects.map(d => {
-            return fetch(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
-                .then(response => response.json())
-                .then(data => {
-                    loading("")
-                    displayData(data);
-                })
-                .catch(err=> console.log(err))
-        }))
+    .then(response => response.json())
+    .then(data =>{
+        data.artObjects.forEach((d) =>{
+            myUrls.push(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
+        })
+        console.log("myUrls",myUrls);
     })
     .catch(err=> console.log(err))
 }
+
+
+async function fetchData() {
+    await fetchUrls();
+    let myRequests = myUrls.map((url) => fetch(url));
+    // Promise.all waits until all jobs are resolved
+    Promise.all(myRequests)
+      .then((responses) => {
+          console.log("first responses:", responses);
+          return responses;
+
+      })
+      // map array of responses into an array of response.json() to read their content
+      .then((responses) => Promise.all(responses.map((r) => r.json())))
+      // all JSON answers are parsed: "users" is the array of them
+      .then((data) => {
+
+      });
+  }
+  
 
 
 
