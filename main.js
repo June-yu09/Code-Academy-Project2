@@ -14,32 +14,10 @@ if (document.title == "Home"){
 
 
 
-// function fetchData(){
-//     fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=30");
-//     .then( response => response.json())
-//     .then( data => {
-//         console.log("First fetch :",data);
-//         return data;
-//     })
-//     .then(async data => {
-//         Promise.all(data.artObjects.map(d => {
-//             return fetch(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
-//                 .then(response => response.json())
-//                 .then(data => {
-//                     loading("")
-//                     displayData(data);
-//                     console.log(data);
-//                 })
-//                 .catch(err=> console.log(err))
-//         }))
-//     })
-//     .catch(err=> console.log(err))
-// }
-
 const myUrls = [];
 
 function fetchUrls(){
-    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=30&type=drawing")
+    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=30&imgonly=True&type=drawing")
         .then(response => response.json())
         .then(data =>{
             data.artObjects.forEach((d) =>{
@@ -49,6 +27,7 @@ function fetchUrls(){
         .catch(err=> console.log(err))
 }
 
+let myResponseData =[];
 
 async function fetchData() {
     await fetchUrls();
@@ -62,9 +41,12 @@ async function fetchData() {
       .then((responses) => Promise.all(responses.map((r) => r.json())))
       // all JSON answers are parsed: "users" is the array of them
       .then((data) => {
-          displayData(data);
-          const myResponseData = [...data];
-          console.log(myResponseData);
+            myResponseData = [...data];
+            filterData();
+            makeArtistName();
+            addEvents();
+            addEvents2();
+            console.log(myResponseData);
       })
       .catch(err =>console.log(err))
   }
@@ -77,6 +59,7 @@ function loading(str){
 }
 
 function displayData(data){
+    loading("");
     const tb = document.getElementById("myTable");
     tb.innerHTML = "";
 
@@ -90,7 +73,7 @@ function displayData(data){
         let myImage = document.createElement("IMG");
 
         newType.innerHTML = myD.objectTypes[0];
-        newArtist.innerHTML = myD.principalMakers[0].name;
+        newArtist.innerHTML = myD.principalOrFirstMaker;
         newTitle.innerHTML = myD.title;
         newPeriod.innerHTML = myD.dating.period;
         myImage.setAttribute("src", myD.webImage.url);
@@ -121,8 +104,15 @@ const addEvents = () => {
     console.log(checkboxes);
     checkboxes.forEach((checkbox)=>{
         checkbox.addEventListener("change",()=>{
+            console.log('aaaaaaaaaaaaaaaaa')
             filterData();
         })
+    })
+}
+
+const addEvents2 = () => {
+    document.getElementById('artistName').addEventListener('change', ()=>{
+        filterData();
     })
 }
 
@@ -131,50 +121,55 @@ const filterData = () => {
         return checkbox.value;
     })
     console.log("checkBoxes",checkBoxes);
-    if(checkBoxes.length ===0){
-        displayData(myResponseData);
-    } else {
-        const result = myResponseData.filter(data =>{
-            if(data.artObject.dating.period in checkBoxes){
-                return data
-            }
-        })
-        displayData(result);
-    }
+
+    let selectedEle = document.getElementById('artistName').value;
+    console.log(selectedEle);
+
+
+    let finalData = myResponseData.filter(data => {
+        return (
+            (checkBoxes.length === 0 && selectedEle === 'all')||
+            (checkBoxes.length !== 0 && selectedEle === 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) ) ||
+            (checkBoxes.length !== 0 && selectedEle !== 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) && selectedEle === data.artObject.principalOrFirstMaker) ||
+            (checkBoxes.length === 0 && selectedEle !== 'all' && selectedEle === data.artObject.principalOrFirstMaker)
+        );
+    
+
+    })
+
+    displayData(finalData);
+
+
+
     
 }
 
-addEvents();
-
-
-
-
-
-
-
-
-
-function fetchData2(){
-    fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=50&type=painting")
-    .then( response => response.json() )
-    
-    .then( data => {
-        return data;
+let artistName = [];
+const makeArtistName = () => {
+    myResponseData.forEach(data => {
+        if(!(data.artObject.principalOrFirstMaker)){
+            console.log("Anonymus Artist");
+        }
+        else if (!(artistName.includes(data.artObject.principalOrFirstMaker))) {
+            artistName.push(data.artObject.principalOrFirstMaker);
+        }
+    });
+    console.log("artistName is ",artistName);
+    artistName.forEach((data,index) =>{
+        let aName = document.createElement('option');
+        aName.innerHTML = data;
+        aName.setAttribute("value",data);
+        aName.setAttribute("id", index);
+        document.getElementById('artistName').appendChild(aName);
     })
-    .then(async data => {
-        await Promise.all(data.artObjects.map(d => {
-            return fetch(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
-                .then(response => response.json())
-                .then(data => {
-                    loading("")
-                    displayData(data);
-
-                })
-                .catch(err=> console.log(err))
-        }))
-    })
-    .catch(err=> console.log(err))
 }
+
+
+
+
+
+
+
 
 
 
@@ -199,4 +194,27 @@ function fetchData2(){
 //     .catch((err)=>{
 //         console.log(err);
 //     })
+// }
+
+
+// function fetchData(){
+//     fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&toppieces=True&ps=30");
+//     .then( response => response.json())
+//     .then( data => {
+//         console.log("First fetch :",data);
+//         return data;
+//     })
+//     .then(async data => {
+//         Promise.all(data.artObjects.map(d => {
+//             return fetch(`https://www.rijksmuseum.nl/api/en/collection/${d.objectNumber}?key=gDhkonP6`)
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     loading("")
+//                     displayData(data);
+//                     console.log(data);
+//                 })
+//                 .catch(err=> console.log(err))
+//         }))
+//     })
+//     .catch(err=> console.log(err))
 // }
