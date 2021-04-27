@@ -28,13 +28,27 @@
         </div>
       </nav>
 
+
+      
+
       <div class="container" id="api-data">
         <p><h1>Our Top pieces</h1></p>
+
+
+        <div class="text-center" id="apiButton" style="display: none">
+          <button type="button" class="btn btn-outline-dark ">Show Our Collection</button>
+        </div>
+
+
+        <div id="myCards">
+          
+        </div>
+
 
     
 
 
-        <table class="table table-bordered align-middle">
+        <table id="wholeTable" class="table table-bordered align-middle">
           <thead class="table-dark">
             <tr>
               <th scope="col">Object Type</th>
@@ -52,6 +66,7 @@
           </tbody>
 
         </table>
+
         <p id="loading"></p>
 
       </div>

@@ -27,13 +27,47 @@ async function fetchData() {
       // all JSON answers are parsed: "users" is the array of them
       .then((data) => {
             myResponseData = [...data];
+            
             displayData(data);
+            displayCard(data);
       })
       .catch(err =>console.log(err))
   }
+
+const displayCard = (data) => {
+    const mycard = document.getElementById("myCards");
+    mycard.innerHTML = "";
+    data.forEach(d => {
+        let myD = d.artObject;
+
+        let newCard = document.createElement("div");
+        newCard.setAttribute("class", "card mb-3");
+        newCard.setAttribute("style", "width: 18rem");
+
+        let newImg = document.createElement("IMG");
+        newImg.setAttribute("class", "card-img-top");
+        newImg.setAttribute("src", `${myD.webImage.url}`);
+        newImg.setAttribute("alt", "Card image cap");
+
+        let newCardBody = document.createElement("div");
+        newCardBody.setAttribute("class","card-body");
+
+        let newPTag = document.createElement("p");
+        newPTag.setAttribute("class","card-text");
+        newPTag.innerHTML = myD.title;
+
+        mycard.appendChild(newCard);
+        mycard.appendChild(newImg);
+        mycard.appendChild(newCardBody);
+        mycard.appendChild(newPTag);
+
+
+
+    })
+}
   
 
-  function loading(str){
+function loading(str){
     document.getElementById("loading").innerHTML = str;
 }
 
@@ -77,3 +111,21 @@ if (document.title=="Search"){
     loading("LOADING...");
     
 } 
+
+
+if (screen.width<450 && screen.height < 950){
+    document.getElementById("apiButton").style.display = "block";
+    document.getElementById("wholeTable").style.display = "none";
+    loading("");
+    document.getElementById("apiButton").addEventListener("click", ()=> {
+        document.getElementById("myCards").style.display = "block";
+        document.getElementById("apiButton").style.display = "none";
+
+    })
+ } else {
+    document.getElementById("myCards").style.display = "none";
+    document.getElementById("wholeTable").style.display = "block";
+    document.getElementById("apiButton").style.display = "none";
+
+}
+

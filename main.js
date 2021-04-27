@@ -84,10 +84,6 @@ function displayData(data){
         myImage.setAttribute("height","300px");
         
 
-        
-
-
-
         tb.appendChild(newRow);
         tb.appendChild(newType);
         tb.appendChild(newArtist);
@@ -97,6 +93,37 @@ function displayData(data){
     })  
 }
 
+const displayCard = (data) => {
+    const mycard = document.getElementById("myCards");
+    mycard.innerHTML = "";
+    data.forEach(d => {
+        let myD = d.artObject;
+
+        let newCard = document.createElement("div");
+        newCard.setAttribute("class", "card mb-3");
+        newCard.setAttribute("style", "width: 18rem");
+
+        let newImg = document.createElement("IMG");
+        newImg.setAttribute("class", "card-img-top");
+        newImg.setAttribute("src", `${myD.webImage.url}`);
+        newImg.setAttribute("alt", "Card image cap");
+
+        let newCardBody = document.createElement("div");
+        newCardBody.setAttribute("class","card-body");
+
+        let newPTag = document.createElement("p");
+        newPTag.setAttribute("class","card-text");
+        newPTag.innerHTML = myD.title;
+
+        mycard.appendChild(newCard);
+        mycard.appendChild(newImg);
+        mycard.appendChild(newCardBody);
+        mycard.appendChild(newPTag);
+
+
+
+    })
+}
 
 if (document.title=="Search"){
     fetchData();
@@ -129,7 +156,6 @@ const filterData = () => {
     let selectedEle = document.getElementById('artistName').value;
     console.log(selectedEle);
 
-
     let finalData = myResponseData.filter(data => {
         return (
             (checkBoxes.length === 0 && selectedEle === 'all')||
@@ -138,13 +164,10 @@ const filterData = () => {
             (checkBoxes.length === 0 && selectedEle !== 'all' && selectedEle === data.artObject.principalOrFirstMaker)
         );
     
-
     })
 
     displayData(finalData);
-
-
-
+    displayCard(finalData);
     
 }
 
@@ -173,14 +196,19 @@ const makeArtistName = () => {
 
 if (screen.width<450 && screen.height < 950){
     document.getElementById("apiButton").style.display = "block";
-    document.getElementById("api-data").style.display = "none";
+    document.getElementById("wholeTable").style.display = "none";
+    document.getElementById("centuryFilter").style.display = "none";
+    document.getElementById("artistFilter").style.display = "none";
+    loading("");
     document.getElementById("apiButton").addEventListener("click", ()=> {
-        document.getElementById("api-data").style.display = "block";
+        document.getElementById("myCards").style.display = "block";
+        document.getElementById("centuryFilter").style.display = "block";
+        document.getElementById("artistFilter").style.display = "block";
         document.getElementById("apiButton").style.display = "none";
+        
+
     })
 }
-
-
 
 
 // function fetchData(){
