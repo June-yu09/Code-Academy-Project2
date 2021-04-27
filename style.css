@@ -1,5 +1,5 @@
 .text-center{
-    padding: 80px;
+    padding: 10px;
 }
 
 .front-image{
@@ -8,6 +8,21 @@
     height: auto;
 }
 p{
-    padding: 25px;
+    padding: 15px;
 
+}
+.centuryFilter .artistFilter{
+    margin: auto;
+}
+
+
+@media screen and (max-width: 600px) {
+    #api-data {
+        display: block;
+    }
+  }
+@media screen and (max-width: 600px) {
+    #apiButton {
+        display: block;
+    }
 }

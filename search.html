@@ -28,47 +28,54 @@
         </div>
       </nav>
 
+      <div class="text-center" id="apiButton" style="display: none">
+        <button type="button" class="btn btn-outline-dark ">Show Our Collection</button>
+      </div>
+
       <div class="container" id="api-data">
         <p><h1>Explore our Collection</h1></p>
 
-        <h4>Century : </h4>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-          <input type="checkbox" name="typeOfPiece" class="btn-check" value="16" id="16C" autocomplete="off">
-          <label class="btn btn-outline-dark" for="16C">16C</label>
-        
-          <input type="checkbox" name="typeOfPiece" class="btn-check" value="17" id="17C" autocomplete="off">
-          <label class="btn btn-outline-dark" for="17C">17C</label>
-        
-          <input type="checkbox" name="typeOfPiece" class="btn-check" value="19" id="19C" autocomplete="off">
-          <label class="btn btn-outline-dark" for="19C">19C</label>
+        <div class="centuryFilter">
+          <h4 style="text-align:left">Century : </h4>
+          <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" name="typeOfPiece" class="btn-check" value="16" id="16C" autocomplete="off">
+            <label class="btn btn-outline-dark" for="16C">16C</label>
+          
+            <input type="checkbox" name="typeOfPiece" class="btn-check" value="17" id="17C" autocomplete="off">
+            <label class="btn btn-outline-dark" for="17C">17C</label>
+          
+            <input type="checkbox" name="typeOfPiece" class="btn-check" value="19" id="19C" autocomplete="off">
+            <label class="btn btn-outline-dark" for="19C">19C</label>
+          </div>
         </div>
+        <br>
 
-        <h4>Artist : </h4>
-        <select id='artistName' class="custom-select">
-          <option value="all">All</option>
-        </select>
-
+        <div class="artistFilter">
+          <h4 style="text-align:left">Artist : </h4>
+          <select id='artistName' class="custom-select">
+            <option value="all">All</option>
+          </select>
+        </div>
         
 
+        <div class="container">
+          <table class="table table-bordered align-middle api-data">
+            <thead class="table-dark">
+              <tr>
+                <th class="col-1" scope="col">Object Type</th>
+                <th class="col-3" scope="col">Artist</th>
+                <th class="col-3" scope="col">Title</th>
+                <th class="col-1" scope="col">Period</th>
+                <th class="col-4" scope="col">Image</th>
+              </tr>
+            </thead>
 
-        <table class="table table-bordered align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th scope="col">Object Type</th>
-              <th scope="col">Artist</th>
-              <th scope="col">Title</th>
-              <th scope="col">Period</th>
-              <th scope="col">Image</th>
-            </tr>
-          </thead>
+            <tbody id="myTable">
+            </tbody>
 
-          <tbody id="myTable">
-            <p id="loading"></p>
-
-
-          </tbody>
-
-        </table>
+          </table>
+        </div>
+        <p id="loading"></p>
 
       </div>
 

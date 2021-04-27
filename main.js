@@ -33,7 +33,7 @@ async function fetchData() {
     await fetchUrls();
     let myRequests = myUrls.map((url) => fetch(url));
     // Promise.all waits until all jobs are resolved
-    let mypromise_which_resolve_in_array_of_promis_of_json = Promise.all(myRequests)
+    Promise.all(myRequests)
       .then((responses) => {
           return responses;
       })
@@ -54,6 +54,7 @@ async function fetchData() {
 
 
 
+
 function loading(str){
     document.getElementById("loading").innerHTML = str;
 }
@@ -66,6 +67,7 @@ function displayData(data){
     data.forEach(d => {
         let myD = d.artObject;
         let newRow = document.createElement("tr");
+
         let newType = document.createElement("td");
         let newArtist = document.createElement("td");
         let newTitle = document.createElement("td");
@@ -76,9 +78,15 @@ function displayData(data){
         newArtist.innerHTML = myD.principalOrFirstMaker;
         newTitle.innerHTML = myD.title;
         newPeriod.innerHTML = myD.dating.period;
+
         myImage.setAttribute("src", myD.webImage.url);
-        myImage.setAttribute("width", "400px");
-        myImage.setAttribute("height","400px");
+        myImage.setAttribute("width", "300px");
+        myImage.setAttribute("height","300px");
+        
+
+        
+
+
 
         tb.appendChild(newRow);
         tb.appendChild(newType);
@@ -94,17 +102,13 @@ if (document.title=="Search"){
     fetchData();
     loading("LOADING...");
     
-} else if (document.title =="Our top pieces"){
-    fetchData();
-    loading("Loading...");
-}
+} 
 
 const addEvents = () => {
     let checkboxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
     console.log(checkboxes);
     checkboxes.forEach((checkbox)=>{
         checkbox.addEventListener("change",()=>{
-            console.log('aaaaaaaaaaaaaaaaa')
             filterData();
         })
     })
@@ -167,8 +171,14 @@ const makeArtistName = () => {
 
 
 
-
-
+if (screen.width<450 && screen.height < 950){
+    document.getElementById("apiButton").style.display = "block";
+    document.getElementById("api-data").style.display = "none";
+    document.getElementById("apiButton").addEventListener("click", ()=> {
+        document.getElementById("api-data").style.display = "block";
+        document.getElementById("apiButton").style.display = "none";
+    })
+}
 
 
 
