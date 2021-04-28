@@ -17,7 +17,7 @@ if (document.title == "Home"){
 const myUrls = [];
 
 function fetchUrls(){
-    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=30&imgonly=True&type=drawing")
+    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=15&imgonly=True&involvedMaker=Rembrandt+van+Rijn")
         .then(response => response.json())
         .then(data =>{
             data.artObjects.forEach((d) =>{

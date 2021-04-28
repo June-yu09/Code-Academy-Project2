@@ -2,7 +2,7 @@
 const myUrls = [];
 
 function fetchUrls(){
-    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=30&imgonly=True&involvedMaker=Johannes+Vermeer")
+    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=20&imgonly=True&involvedMaker=Johannes+Vermeer")
         .then(response => response.json())
         .then(data =>{
             data.artObjects.forEach((d) =>{
@@ -37,7 +37,7 @@ async function fetchData() {
 const displayCard = (data) => {
     const mycard = document.getElementById("myCards");
     mycard.innerHTML = "";
-    data.forEach(d => {
+    data.forEach((d,index) => {
         let myD = d.artObject;
 
         let newCard = document.createElement("div");
@@ -48,7 +48,8 @@ const displayCard = (data) => {
         newImg.setAttribute("class", "card-img-top");
         newImg.setAttribute("src", `${myD.webImage.url}`);
         newImg.setAttribute("alt", "Card image cap");
-
+        
+    
         let newCardBody = document.createElement("div");
         newCardBody.setAttribute("class","card-body");
 
@@ -56,10 +57,76 @@ const displayCard = (data) => {
         newPTag.setAttribute("class","card-text");
         newPTag.innerHTML = myD.title;
 
+
+        let moreButton = document.createElement("button");
+        moreButton.setAttribute('type','button');
+        moreButton.setAttribute('class','btn btn-primary');
+        moreButton.setAttribute('data-bs-toggle','modal');
+        moreButton.setAttribute('data-bs-target',`#myModal${index}`);
+        moreButton.innerHTML = "more Details";
+
+
+
+        let myModal = document.createElement("div");
+        myModal.setAttribute('class','modal fade');
+        myModal.setAttribute('id', `myModal${index}`);
+        myModal.setAttribute('tabindex','-1');
+        myModal.setAttribute('aria-labelledby','myModalLabel');
+        myModal.setAttribute('aria-hidden','true');
+
+        let modalDialog = document.createElement("div");
+        modalDialog.setAttribute('class','modal-dialog');
+
+        let modalContent = document.createElement("div");
+        modalContent.setAttribute('class','modal-content');
+        modalContent.style.backgroundColor = "white";
+
+        let modalHeader = document.createElement("div");
+        modalContent.setAttribute('class','modal-header');
+
+        let modalButton = document.createElement("button");
+        modalButton.setAttribute('type','button');
+        modalButton.setAttribute('class','btn-close');
+        modalButton.setAttribute('data-bs-dismiss','modal');
+        modalButton.setAttribute('aria-label','Close');
+        
+        let modalBody = document.createElement("div");
+        modalBody.setAttribute('class','modal-body');
+
+        let insideModal1 = document.createElement("p");
+        insideModal1.innerHTML = myD.principalOrFirstMaker;
+
+        let insideModal2 = document.createElement("p");
+        insideModal2.innerHTML = myD.dating.period;
+
+        let modalFooter = document.createElement("div");
+        modalFooter.setAttribute('class','modal-footer');
+
+        let closeButton = document.createElement("button");
+        closeButton.setAttribute('type','button');
+        closeButton.setAttribute('class','btn btn-primary');
+        closeButton.setAttribute('data-bs-dismiss','modal');
+        closeButton.innerHTML = "Close";
+
+
+
+
         mycard.appendChild(newCard);
         mycard.appendChild(newImg);
         mycard.appendChild(newCardBody);
-        mycard.appendChild(newPTag);
+        newCardBody.appendChild(newPTag);
+        newCardBody.appendChild(moreButton);
+
+        newCardBody.appendChild(myModal);
+        myModal.appendChild(modalDialog);
+        modalDialog.appendChild(modalContent);
+        modalContent.appendChild(modalHeader);
+        modalHeader.appendChild(modalButton);
+        modalContent.appendChild(modalBody);
+        modalBody.appendChild(insideModal1);
+        modalBody.appendChild(insideModal2);
+        modalContent.appendChild(modalFooter);
+        modalFooter.appendChild(closeButton);
 
 
 
@@ -72,7 +139,7 @@ function loading(str){
 }
 
 function displayData(data){
-    loading("");
+    document.getElementById("mySpinner").style.display = "none";
     const tb = document.getElementById("myTable");
     tb.innerHTML = "";
 
@@ -108,15 +175,13 @@ function displayData(data){
 
 if (document.title=="Search"){
     fetchData();
-    loading("LOADING...");
-    
 } 
 
 
 if (screen.width<450 && screen.height < 950){
     document.getElementById("apiButton").style.display = "block";
     document.getElementById("wholeTable").style.display = "none";
-    loading("");
+    document.getElementById("mySpinner").style.display = "none";
     document.getElementById("apiButton").addEventListener("click", ()=> {
         document.getElementById("myCards").style.display = "block";
         document.getElementById("apiButton").style.display = "none";
