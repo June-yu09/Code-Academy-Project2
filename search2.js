@@ -22,12 +22,9 @@ async function fetchData() {
       .then((responses) => {
           return responses;
       })
-      // map array of responses into an array of response.json() to read their content
       .then((responses) => Promise.all(responses.map((r) => r.json())))
-      // all JSON answers are parsed: "users" is the array of them
       .then((data) => {
             myResponseData = [...data];
-            
             displayData(data);
             displayCard(data);
       })
@@ -60,7 +57,7 @@ const displayCard = (data) => {
 
         let moreButton = document.createElement("button");
         moreButton.setAttribute('type','button');
-        moreButton.setAttribute('class','btn btn-primary');
+        moreButton.setAttribute('class','btn btn-dark');
         moreButton.setAttribute('data-bs-toggle','modal');
         moreButton.setAttribute('data-bs-target',`#myModal${index}`);
         moreButton.innerHTML = "more Details";
@@ -75,7 +72,7 @@ const displayCard = (data) => {
         myModal.setAttribute('aria-hidden','true');
 
         let modalDialog = document.createElement("div");
-        modalDialog.setAttribute('class','modal-dialog');
+        modalDialog.setAttribute('class','modal-dialog modal-dialog-centered');
 
         let modalContent = document.createElement("div");
         modalContent.setAttribute('class','modal-content');
@@ -94,17 +91,17 @@ const displayCard = (data) => {
         modalBody.setAttribute('class','modal-body');
 
         let insideModal1 = document.createElement("p");
-        insideModal1.innerHTML = myD.principalOrFirstMaker;
+        insideModal1.innerHTML = `Artist : ${myD.principalOrFirstMaker}`;
 
         let insideModal2 = document.createElement("p");
-        insideModal2.innerHTML = myD.dating.period;
+        insideModal2.innerHTML = `Century : ${myD.dating.period}`;
 
         let modalFooter = document.createElement("div");
         modalFooter.setAttribute('class','modal-footer');
 
         let closeButton = document.createElement("button");
         closeButton.setAttribute('type','button');
-        closeButton.setAttribute('class','btn btn-primary');
+        closeButton.setAttribute('class','btn btn-dark');
         closeButton.setAttribute('data-bs-dismiss','modal');
         closeButton.innerHTML = "Close";
 
@@ -131,11 +128,6 @@ const displayCard = (data) => {
 
 
     })
-}
-  
-
-function loading(str){
-    document.getElementById("loading").innerHTML = str;
 }
 
 function displayData(data){
@@ -164,11 +156,11 @@ function displayData(data){
     
 
         tb.appendChild(newRow);
-        tb.appendChild(newType);
-        tb.appendChild(newArtist);
-        tb.appendChild(newTitle);
-        tb.appendChild(newPeriod);
-        tb.appendChild(myImage);
+        newRow.appendChild(newType);
+        newRow.appendChild(newArtist);
+        newRow.appendChild(newTitle);
+        newRow.appendChild(newPeriod);
+        newRow.appendChild(myImage);
     })  
 }
 
@@ -178,7 +170,7 @@ if (document.title=="Search"){
 } 
 
 
-if (screen.width<450 && screen.height < 950){
+if (screen.width<480 && screen.height < 950){
     document.getElementById("apiButton").style.display = "block";
     document.getElementById("wholeTable").style.display = "none";
     document.getElementById("mySpinner").style.display = "none";

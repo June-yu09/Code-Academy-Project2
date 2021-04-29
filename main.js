@@ -1,4 +1,4 @@
-
+//for index.html(home)
 function clickMe(){
     if(document.getElementById("myButton").innerHTML =="Show More"){
         document.getElementById("myDesc").style.display = "block";
@@ -6,18 +6,16 @@ function clickMe(){
     } else if (document.getElementById("myButton").innerHTML == "Show Less"){
         document.getElementById("myDesc").style.display = 'none';
         document.getElementById("myButton").innerHTML = "Show More";
-}
-}
-if (document.title == "Home"){
-    document.getElementById("myButton").addEventListener("click", clickMe);
+    }
 }
 
 
-
+//for search.html
 const myUrls = [];
 
+//API data makes error often. So that if it doesn't work, try to change endpoint of the url... such as type=figure or involvedMaker=Johannes+Vermeer
 function fetchUrls(){
-    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=15&imgonly=True&involvedMaker=Rembrandt+van+Rijn")
+    return fetch("https://www.rijksmuseum.nl/api/en/collection?key=gDhkonP6&ps=25&imgonly=True&type=drawing")
         .then(response => response.json())
         .then(data =>{
             data.artObjects.forEach((d) =>{
@@ -34,22 +32,22 @@ async function fetchData() {
     let myRequests = myUrls.map((url) => fetch(url));
     // Promise.all waits until all jobs are resolved
     Promise.all(myRequests)
-      .then((responses) => {
-          return responses;
-      })
-      // map array of responses into an array of response.json() to read their content
-      .then((responses) => Promise.all(responses.map((r) => r.json())))
-      // all JSON answers are parsed: "users" is the array of them
-      .then((data) => {
+        .then((responses) => {
+            return responses;
+        })
+        // map array of responses into an array of response.json() to read their content
+        .then((responses) => Promise.all(responses.map((r) => r.json())))
+        // all JSON answers are parsed: "users" is the array of them
+        .then((data) => {
             myResponseData = [...data];
-            filterData();
             makeArtistName();
+            filterData();
             addEvents();
             addEvents2();
             console.log(myResponseData);
-      })
-      .catch(err =>console.log(err))
-  }
+        })
+        .catch(err => console.log(err))
+}
   
 
 
@@ -58,6 +56,64 @@ async function fetchData() {
 function loading(str){
     document.getElementById("loading").innerHTML = str;
 }
+
+const addEvents = () => {
+    let checkboxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
+    checkboxes.forEach((checkbox)=>{
+        checkbox.addEventListener("change",()=>{
+            filterData();
+        })
+    })
+}
+
+const addEvents2 = () => {
+    document.getElementById('artistName').addEventListener('change', ()=>{
+        filterData();
+    })
+}
+
+const filterData = () => {
+    let checkBoxes = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map((checkbox)=>{
+        return checkbox.value;
+    })
+    console.log("checkBoxes",checkBoxes);
+
+    let selectedEle = document.getElementById('artistName').value;
+
+    let finalData = myResponseData.filter(data => {
+        return (
+            (checkBoxes.length === 0 && selectedEle === 'all')||
+            (checkBoxes.length !== 0 && selectedEle === 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) ) ||
+            (checkBoxes.length !== 0 && selectedEle !== 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) && selectedEle === data.artObject.principalOrFirstMaker) ||
+            (checkBoxes.length === 0 && selectedEle !== 'all' && selectedEle === data.artObject.principalOrFirstMaker)
+        );
+    
+    })
+
+    displayData(finalData);
+    displayCard(finalData);
+    
+}
+
+let artistName = [];
+const makeArtistName = () => {
+    myResponseData.forEach(data => {
+        if(!(data.artObject.principalOrFirstMaker)){
+            console.log("Anonymus Artist");
+        }
+        else if (!(artistName.includes(data.artObject.principalOrFirstMaker))) {
+            artistName.push(data.artObject.principalOrFirstMaker);
+        }
+    });
+    artistName.forEach((data,index) =>{
+        let aName = document.createElement('option');
+        aName.innerHTML = data;
+        aName.setAttribute("value",data);
+        aName.setAttribute("id", index);
+        document.getElementById('artistName').appendChild(aName);
+    })
+}
+
 
 function displayData(data){
     loading("");
@@ -85,18 +141,18 @@ function displayData(data){
         
 
         tb.appendChild(newRow);
-        tb.appendChild(newType);
-        tb.appendChild(newArtist);
-        tb.appendChild(newTitle);
-        tb.appendChild(newPeriod);
-        tb.appendChild(myImage);
+        newRow.appendChild(newType);
+        newRow.appendChild(newArtist);
+        newRow.appendChild(newTitle);
+        newRow.appendChild(newPeriod);
+        newRow.appendChild(myImage);
     })  
 }
 
 const displayCard = (data) => {
     const mycard = document.getElementById("myCards");
     mycard.innerHTML = "";
-    data.forEach(d => {
+    data.forEach((d,index) => {
         let myD = d.artObject;
 
         let newCard = document.createElement("div");
@@ -107,7 +163,8 @@ const displayCard = (data) => {
         newImg.setAttribute("class", "card-img-top");
         newImg.setAttribute("src", `${myD.webImage.url}`);
         newImg.setAttribute("alt", "Card image cap");
-
+        
+    
         let newCardBody = document.createElement("div");
         newCardBody.setAttribute("class","card-body");
 
@@ -115,10 +172,81 @@ const displayCard = (data) => {
         newPTag.setAttribute("class","card-text");
         newPTag.innerHTML = myD.title;
 
+
+        let moreButton = document.createElement("button");
+        moreButton.setAttribute('type','button');
+        moreButton.setAttribute('class','btn btn-dark');
+        moreButton.setAttribute('data-bs-toggle','modal');
+        moreButton.setAttribute('data-bs-target',`#myModal${index}`);
+        moreButton.innerHTML = "more Details";
+
+
+
+        let myModal = document.createElement("div");
+        myModal.setAttribute('class','modal fade');
+        myModal.setAttribute('id', `myModal${index}`);
+        myModal.setAttribute('tabindex','-1');
+        myModal.setAttribute('aria-labelledby','myModalLabel');
+        myModal.setAttribute('aria-hidden','true');
+
+        let modalDialog = document.createElement("div");
+        modalDialog.setAttribute('class','modal-dialog modal-dialog-centered');
+
+        let modalContent = document.createElement("div");
+        modalContent.setAttribute('class','modal-content');
+        modalContent.style.backgroundColor = "white";
+
+        let modalHeader = document.createElement("div");
+        modalContent.setAttribute('class','modal-header');
+
+        let modalButton = document.createElement("button");
+        modalButton.setAttribute('type','button');
+        modalButton.setAttribute('class','btn-close');
+        modalButton.setAttribute('data-bs-dismiss','modal');
+        modalButton.setAttribute('aria-label','Close');
+        
+        let modalBody = document.createElement("div");
+        modalBody.setAttribute('class','modal-body');
+
+        let insideModal1 = document.createElement("p");
+        insideModal1.innerHTML = `Artist:${myD.principalOrFirstMaker}`;
+
+        let insideModal2 = document.createElement("p");
+        insideModal2.innerHTML = `Century:${myD.dating.period}`;
+
+
+
+        let modalFooter = document.createElement("div");
+        modalFooter.setAttribute('class','modal-footer');
+
+        let closeButton = document.createElement("button");
+        closeButton.setAttribute('type','button');
+        closeButton.setAttribute('class','btn btn-dark');
+        closeButton.setAttribute('data-bs-dismiss','modal');
+        closeButton.innerHTML = "Close";
+
+
         mycard.appendChild(newCard);
         mycard.appendChild(newImg);
         mycard.appendChild(newCardBody);
-        mycard.appendChild(newPTag);
+        newCardBody.appendChild(newPTag);
+        newCardBody.appendChild(moreButton);
+
+        newCardBody.appendChild(myModal);
+        myModal.appendChild(modalDialog);
+        modalDialog.appendChild(modalContent);
+        modalContent.appendChild(modalHeader);
+        modalHeader.appendChild(modalButton);
+
+
+        modalContent.appendChild(modalBody);
+
+        modalBody.appendChild(insideModal1);
+        modalBody.appendChild(insideModal2);
+
+
+        modalContent.appendChild(modalFooter);
+        modalFooter.appendChild(closeButton);
 
 
 
@@ -128,73 +256,16 @@ const displayCard = (data) => {
 if (document.title=="Search"){
     fetchData();
     loading("LOADING...");
-    
-} 
-
-const addEvents = () => {
-    let checkboxes = Array.from(document.querySelectorAll('input[type=checkbox]'));
-    console.log(checkboxes);
-    checkboxes.forEach((checkbox)=>{
-        checkbox.addEventListener("change",()=>{
-            filterData();
-        })
-    })
-}
-
-const addEvents2 = () => {
-    document.getElementById('artistName').addEventListener('change', ()=>{
-        filterData();
-    })
-}
-
-const filterData = () => {
-    let checkBoxes = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map((checkbox)=>{
-        return checkbox.value;
-    })
-    console.log("checkBoxes",checkBoxes);
-
-    let selectedEle = document.getElementById('artistName').value;
-    console.log(selectedEle);
-
-    let finalData = myResponseData.filter(data => {
-        return (
-            (checkBoxes.length === 0 && selectedEle === 'all')||
-            (checkBoxes.length !== 0 && selectedEle === 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) ) ||
-            (checkBoxes.length !== 0 && selectedEle !== 'all' && checkBoxes.includes(`${data.artObject.dating.period}`) && selectedEle === data.artObject.principalOrFirstMaker) ||
-            (checkBoxes.length === 0 && selectedEle !== 'all' && selectedEle === data.artObject.principalOrFirstMaker)
-        );
-    
-    })
-
-    displayData(finalData);
-    displayCard(finalData);
-    
-}
-
-let artistName = [];
-const makeArtistName = () => {
-    myResponseData.forEach(data => {
-        if(!(data.artObject.principalOrFirstMaker)){
-            console.log("Anonymus Artist");
-        }
-        else if (!(artistName.includes(data.artObject.principalOrFirstMaker))) {
-            artistName.push(data.artObject.principalOrFirstMaker);
-        }
-    });
-    console.log("artistName is ",artistName);
-    artistName.forEach((data,index) =>{
-        let aName = document.createElement('option');
-        aName.innerHTML = data;
-        aName.setAttribute("value",data);
-        aName.setAttribute("id", index);
-        document.getElementById('artistName').appendChild(aName);
-    })
+} else if (document.title == "Home"){
+    document.getElementById("myButton").addEventListener("click", clickMe);
 }
 
 
 
 
-if (screen.width<450 && screen.height < 950){
+
+
+if (screen.width<480 && screen.height < 950){
     document.getElementById("apiButton").style.display = "block";
     document.getElementById("wholeTable").style.display = "none";
     document.getElementById("centuryFilter").style.display = "none";
